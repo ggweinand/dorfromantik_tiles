@@ -1,17 +1,20 @@
-package main
+package tiles
 
-import (
-	"fmt"
-	"log"
-	"net/http"
-)
+import "regexp"
 
-func handleHelloWorld (w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Hello World!\n")
+type Tile struct {
+	layout       string
+	doubleLayout string
 }
 
-func main() {
-    http.HandleFunc("/", handleHelloWorld)
+func (t Tile) Matches(r regexp.Regexp) bool {
+	return r.MatchString(t.doubleLayout)
+}
 
-    log.Fatal(http.ListenAndServe(":8080", nil))
+func (t Tile) String() string {
+	return t.layout
+}
+
+func TileFromString(s string) Tile {
+	return Tile{s, s + s}
 }
