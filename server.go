@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
 )
 
 func getTiles(w http.ResponseWriter, r *http.Request, tiles []Tile) {
@@ -23,10 +25,21 @@ func getTiles(w http.ResponseWriter, r *http.Request, tiles []Tile) {
 	fmt.Fprintf(w, "Total amount of matches: %v\n", matches)
 }
 
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	file, _ := os.Open("home.html")
+	defer file.Close()
+
+	message, _ := io.ReadAll(file)
+	fmt.Fprintf(w, string(message))
+}
+
+
 func main() {
 	taskTiles, _ := LoadTilesFromFile("tiles/task_tiles.txt")
 	taskTilesHandler := func(w http.ResponseWriter, r *http.Request) { getTiles(w, r, taskTiles) }
 	http.HandleFunc("GET /tiles/{query}", taskTilesHandler)
+
+	http.HandleFunc("GET /", homeHandler)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dorfromantik Tile Query</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    input, button {
+      font-size: 1rem;
+      padding: 0.5rem;
+    }
+    #error {
+      color: red;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dorfromantik Tiles</h1>
+  <p>Enter a 0 to 6-letter query using:</p>
+  <ul>
+    <li><strong>W</strong> - Woods</li>
+    <li><strong>G</strong> - Grain</li>
+    <li><strong>V</strong> - Village</li>
+    <li><strong>S</strong> - Stream</li>
+    <li><strong>T</strong> - Track</li>
+    <li><strong>M</strong> - Meadows</li>
+    <li><strong>A</strong> - Any</li>
+  </ul>
+
+    <input type="text" id="tileQuery" maxlength="6" placeholder="e.g. VVAAAA" />
+  <button onclick="goToTile()">Query</button>
+
+  <div id="error"></div>
+
+  <script>
+    function goToTile() {
+      const input = document.getElementById('tileQuery');
+      const query = input.value.toUpperCase();
+      const errorDiv = document.getElementById('error');
+      errorDiv.textContent = '';
+
+      if (!/^[WGVSATM]{0,6}$/.test(query)) {
+        errorDiv.textContent = 'Invalid input. Use only W, G, V, S, T, M, A.';
+        return;
+      }
+
+      const paddedQuery = query.padEnd(6, 'A');
+      window.location.href = `/tiles/${paddedQuery}`;
+    }
+  </script>
+</body>
+</html>
